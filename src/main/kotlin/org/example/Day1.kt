@@ -17,6 +17,9 @@ private fun List<Long>.similarity(other: List<Long>): Long {
     val secondMutable = other.toMutableList()
 
     return this.fold(0L) { acc, i ->
+        if (secondMutable.isEmpty()) {
+            return@similarity acc
+        }
         val occurrences = memory[i]
         val totalOccurrences = if (occurrences == null) {
             val size = secondMutable.size
