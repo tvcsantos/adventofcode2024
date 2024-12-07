@@ -1,8 +1,6 @@
 package org.example
 
 import kotlin.math.abs
-import kotlin.time.TimedValue
-import kotlin.time.measureTime
 import kotlin.time.measureTimedValue
 
 private fun List<Long>.distance(other: List<Long>): Long {
