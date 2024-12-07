@@ -1,6 +1,9 @@
 package org.example
 
 import kotlin.math.abs
+import kotlin.time.TimedValue
+import kotlin.time.measureTime
+import kotlin.time.measureTimedValue
 
 private fun List<Long>.distance(other: List<Long>): Long {
     val firstListOrdered = this.sorted().asSequence()
@@ -45,9 +48,11 @@ suspend fun main() {
             firstNumber to secondNumber
         }.unzip()
 
-    firstList.distance(secondList)
-        .run(::println)
+    measureTimedValue {
+        firstList.distance(secondList)
+    }.present()
 
-    firstList.similarity(secondList)
-        .run(::println)
+    measureTimedValue {
+        firstList.similarity(secondList)
+    }.present()
 }

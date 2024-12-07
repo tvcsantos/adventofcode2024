@@ -6,6 +6,7 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.withContext
 import java.io.File
+import kotlin.time.TimedValue
 
 private val client = HttpClient(CIO)
 
@@ -39,4 +40,8 @@ suspend fun loadInput(day: Int): List<String> {
 
     return text.lines()
         .filterNot(String::isBlank)
+}
+
+fun <T> TimedValue<T>.present() {
+    println("Solution: $value. Execution time: $duration")
 }
