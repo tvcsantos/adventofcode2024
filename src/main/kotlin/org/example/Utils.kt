@@ -10,9 +10,9 @@ import kotlin.time.TimedValue
 
 private val client = HttpClient(CIO)
 
-suspend fun loadInput(day: Int): List<String> {
+suspend fun loadInput(folder: File, day: Int): List<String> {
     val lines = withContext(kotlinx.coroutines.Dispatchers.IO) {
-        File("input/day$day.txt")
+        File(folder, "day$day.txt")
             .takeIf { it.exists() }
             ?.readLines()
     }
@@ -31,11 +31,10 @@ suspend fun loadInput(day: Int): List<String> {
     }.bodyAsText()
 
     withContext(kotlinx.coroutines.Dispatchers.IO) {
-        val outputDir = File("input")
-        if (!outputDir.exists()) {
-            outputDir.mkdir()
+        if (!folder.exists()) {
+            folder.mkdir()
         }
-        File("input/day$day.txt").writeText(text)
+        File(folder, "day$day.txt").writeText(text)
     }
 
     return text.lines()
@@ -45,3 +44,8 @@ suspend fun loadInput(day: Int): List<String> {
 fun <T> TimedValue<T>.present() {
     println("Solution: $value. Execution time: $duration")
 }
+
+private val exampleFolder = File("example")
+private val inputFolder = File("input")
+
+val inputFolders = listOf(exampleFolder, inputFolder)

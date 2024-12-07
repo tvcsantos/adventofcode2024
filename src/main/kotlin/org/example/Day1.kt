@@ -1,5 +1,6 @@
 package org.example
 
+import java.io.File
 import kotlin.math.abs
 import kotlin.time.measureTimedValue
 
@@ -35,10 +36,11 @@ private fun List<Long>.similarity(other: List<Long>): Long {
     }
 }
 
-suspend fun main() {
-    val lines = loadInput(day = 1)
+private suspend fun solvePuzzle(folder: File) {
+    val lines = loadInput(folder = folder, day = 1)
 
     val (firstList, secondList) =  lines
+        .asSequence()
         .map {
             val elements = it.split(" ")
             val firstNumber = elements.first().toLong()
@@ -53,4 +55,11 @@ suspend fun main() {
     measureTimedValue {
         firstList.similarity(secondList)
     }.present()
+}
+
+suspend fun main() {
+    inputFolders.forEach {
+        println("Solutions for $it folder")
+        solvePuzzle(it)
+    }
 }
