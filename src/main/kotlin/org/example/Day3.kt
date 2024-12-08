@@ -19,23 +19,26 @@ private fun compute(memory: List<String>): Long {
 private val mulConditionalRegex: Regex =
     Regex("""do\(\)|don't\(\)|mul\((\d{1,3}),(\d{1,3})\)""")
 
+private data class ComputeState(
+    val enabled: Boolean,
+    val sum: Long
+)
+
 private fun computeConditional(memory: List<String>): Long {
-    var enabled = true
-    fun computeSlot(memory: String): Long =
-        mulConditionalRegex.findAll(memory).sumOf {
-            val match = it.value
+    fun computeSlot(initialState: ComputeState, memory: String): ComputeState =
+        mulConditionalRegex.findAll(memory).fold(initialState) { state, match ->
             when {
-                match == "do()" -> { enabled = true; 0 }
-                match == "don't()" -> { enabled = false; 0 }
-                enabled -> {
-                    val x = it.groupValues[1].toLong()
-                    val y = it.groupValues[2].toLong()
-                    x * y
+                match.value == "do()" -> state.copy(enabled = true)
+                match.value == "don't()" -> state.copy(enabled = false)
+                state.enabled -> {
+                    val x = match.groupValues[1].toLong()
+                    val y = match.groupValues[2].toLong()
+                    state.copy(sum = state.sum + x * y)
                 }
-                else -> 0
+                else -> state
             }
         }
-    return memory.sumOf(::computeSlot)
+    return memory.fold(ComputeState(enabled = true, sum = 0), ::computeSlot).sum
 }
 
 private suspend fun solvePuzzle(folder: File) {
